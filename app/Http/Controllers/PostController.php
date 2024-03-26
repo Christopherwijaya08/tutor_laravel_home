@@ -25,4 +25,8 @@ class PostController extends Controller
         $post = Post::findOrFail($id);
         return new PostDetailResource($post);
     }
+
+    public function store (Request $request){
+        return response()->json('oke bisa diakses');
+    }
 }
