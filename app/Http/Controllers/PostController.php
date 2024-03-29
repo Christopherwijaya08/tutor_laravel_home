@@ -42,8 +42,6 @@ class PostController extends Controller
         $validated = $request->validate([
             'title' => 'required|max:255',
             'news_content' => 'required',
-        ]);
-
-        
+        ]);        
     }
 }
