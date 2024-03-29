@@ -11,8 +11,12 @@ Route::middleware(['auth:sanctum'])->group(function (){
     Route::get('/postsNoWriter/{id}', [PostController::class, 'showWithOutWriter']);
     Route::get('/logout', [AuthenticationController::class, 'logout']);
     Route::get('/userDetailByToken', [AuthenticationController::class, 'getUserDetailByToken']);
+    
+    Route::post('/posts', [PostController::class, 'store']);
+
+    Route::patch('/posts/{id}', [PostController::class, 'update'])->middleware('post-owner');
+    
 });
 
 Route::post('/login', [AuthenticationController::class, 'login']);
 
-Route::post('/posts2', [PostController::class, 'store']);

@@ -6,13 +6,14 @@ use App\Http\Resources\PostDetailResource;
 use App\Http\Resources\PostResource;
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
     public function index(){
-        $posts = Post::all();
+        $posts = Post::with('writer:id,username')->get();
         // return response()->json(['data' => $posts]);
-        return PostResource::collection($posts);
+        return PostDetailResource::collection($posts);
     }
 
     public function show($id){
@@ -27,6 +28,22 @@ class PostController extends Controller
     }
 
     public function store (Request $request){
-        return response()->json('oke bisa diakses');
+        $validated = $request->validate([
+            'title' => 'required|max:255',
+            'news_content' => 'required',
+        ]);
+
+        $request['author'] = Auth::user()->id;
+        $postDatabase = Post::create($request->all());
+        return new PostDetailResource($postDatabase->loadMissing('writer:id,username'));
+    }
+
+    public function update(Request $request, $id) {
+        $validated = $request->validate([
+            'title' => 'required|max:255',
+            'news_content' => 'required',
+        ]);
+
+        
     }
 }
