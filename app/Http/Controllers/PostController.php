@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
+    // GET
     public function index(){
         $posts = Post::with('writer:id,username')->get();
         // return response()->json(['data' => $posts]);
@@ -27,6 +28,7 @@ class PostController extends Controller
         return new PostDetailResource($post);
     }
 
+    // POST
     public function store (Request $request){
         $validated = $request->validate([
             'title' => 'required|max:255',
@@ -35,13 +37,31 @@ class PostController extends Controller
 
         $request['author'] = Auth::user()->id;
         $postDatabase = Post::create($request->all());
+        // $postDatabase = Post
         return new PostDetailResource($postDatabase->loadMissing('writer:id,username'));
     }
 
+    // UPDATE OR PUT
     public function update(Request $request, $id) {
         $validated = $request->validate([
             'title' => 'required|max:255',
             'news_content' => 'required',
-        ]);        
+        ]);
+        
+        $post = Post::findOrFail($id);
+        $post->update($request->all());
+
+        return new PostDetailResource($post->loadMissing('writer:id,username'));
+    }
+
+    // DELETE (softdeletes (???))
+    public function destroy($id){
+        $post = Post::findOrFail($id);
+        $post->delete();
+
+        return response()->json([
+            'message' => 'Data deleted successfully',
+            'data' =>  new PostDetailResource($post->loadMissing('writer:id,username'))
+        ]);
     }
 }

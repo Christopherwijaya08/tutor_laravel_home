@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Post;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,7 +18,15 @@ class PostOwner
     public function handle(Request $request, Closure $next): Response
     {
         $currentUser = Auth::user();
-        return response()->json($currentUser);
-        // return $next($request);
+        $post = Post::findOrFail($request->id);
+
+        if ($currentUser->id !== $post->author) {
+            return response()->json([
+               'message' => 'Cannot edit because you are not the author'
+            ], 404);
+            
+        }
+        // return response()->json($currentUser);
+        return $next($request);
     }
 }

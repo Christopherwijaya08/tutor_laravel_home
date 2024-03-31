@@ -13,10 +13,8 @@ Route::middleware(['auth:sanctum'])->group(function (){
     Route::get('/userDetailByToken', [AuthenticationController::class, 'getUserDetailByToken']);
     
     Route::post('/posts', [PostController::class, 'store']);
-
     Route::patch('/posts/{id}', [PostController::class, 'update'])->middleware('post-owner');
-    
+    Route::delete('/delete/{id}', [PostController::class, 'destroy'])->middleware('post-owner');
 });
 
 Route::post('/login', [AuthenticationController::class, 'login']);
-
