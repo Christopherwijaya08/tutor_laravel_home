@@ -11,23 +11,21 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('posts', function (Blueprint $table) {
+        Schema::create('users_sessions', function (Blueprint $table) {
             $table->id();
-            $table->string('title', 255);
-            $table->string('news_content');
-            $table->unsignedBigInteger('author');
+            $table->foreignId('user_id');
+            $table->timestamp('login_time')->nullable();
+            $table->timestamp('logout_time')->nullable();
             $table->timestamps();
-            $table->softDeletes();
-            
-            $table->foreign('author')-> references('id')->on('users');
-        }); 
+        });
     }
 
     /**
      * Reverse the migrations.
+     * @return void
      */
     public function down(): void
     {
-        Schema::dropIfExists('posts');
+        Schema::dropIfExists('users_sessions');
     }
 };
