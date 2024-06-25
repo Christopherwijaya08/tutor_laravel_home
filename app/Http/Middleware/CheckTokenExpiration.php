@@ -29,10 +29,10 @@ class CheckTokenExpiration
         }
 
         $expiration = config('sanctum.expiration') * 60; // convert to seconds
-        if (Carbon::parse($accessToken->created_at)->addSeconds($expiration)->isPast()) {
-            $accessToken->delete();
-            return response()->json(['message' => 'Token expired.'], 401);
-        }
+        // if (Carbon::parse($accessToken->created_at)->addSeconds($expiration)->isPast()) {
+        //     $accessToken->delete();
+        //     return response()->json(['message' => 'Token expired.'], 401);
+        // }
 
         return $next($request);
     }
